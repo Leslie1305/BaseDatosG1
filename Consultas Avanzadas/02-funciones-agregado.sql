@@ -1,68 +1,47 @@
--- Funciones de agredado y agrupaci√≥n 
+--FUNCIONES DE AGREGADO Y AGRUPACI”N
 
--- Utilizar base de datos
-use northwind;
+--utilizar base de datos
+use NORTHWND;
 
--- Funciones de Agregado
+--funciones de agregado
 
--- Seleccionar el numero de total de ordenes de compra
+--seleccionar el numero total de ordenes de compra
+--COUNT(*)
+select count(*) as 'NumeroOrdenes' from orders 
 
--- count(*)
+select count(*) from Customers
 
-select count(*) as 'Numero de ordenes' from orders;
+select count(region) from customers
 
-select count(*) from Customers;
+--seleccionar el maximo numero de productos pedidos
+select max(Quantity) as 'Cantidad' from [order Details]
 
--- count(campo)
+select min(Quantity) as 'Cantidad' from [order Details]
 
-select count(region) from customers;
+--seleccionar el total de la cantidad de predictos pedidos
+select sum(UnitPrice) from [order Details]
 
--- Seleccionar el maximo numero de productos pedidos
-select max(Quantity) as 'Cantidad' 
-from [order Details];
+--seleccionar el total de dinero que he vendido 
+select sum(od.Quantity * od.UnitPrice) as 'Total' from [order Details] as od
+inner join products as p
+on od.ProductID = p.ProductID where p.ProductName = 'Aniseed Syrup';
 
--- Seleccionar el minimo numero de productos pedidos
-select min(Quantity) as 'Cantidad' 
-from [order Details];
+--seleccionar el promedio de las ventas del producto 3
+select avg(od.Quantity * od.UnitPrice) as 'PromedioVentas' from [order Details] as od
+inner join products as p
+on od.ProductID = p.ProductID where p.ProductName = 'Aniseed Syrup'; 
 
+--seleccionar el numero de productos por categoria
+select sum(categoryid), count(*) as 'NumeroProductos' from products
 
--- Selecionar el total de la cantidades de los productos pedidos
-select sum(unitprice) from [order Details];
-
--- Seleccionar el total de dinero que he vendido 
-select sum(Quantity * od.unitprice) as total 
-from [order Details] as od
-INNER JOIN products as p
-on od.productid = p.productid
-where p.productName = 'Aniseed Syrup';
-
--- Seleccionar el promedio de las ventas del producto 3
-
-select avg(Quantity * od.unitprice) as 'Promedio de Ventas' 
-from [order Details] as od
-INNER JOIN products as p
-on od.productid = p.productid
-where p.productName = 'Aniseed Syrup';
-
-
--- Selecionar el numero de productos por categoria
-
-select categoryid, count(*) as 'numero de productos'
-from products
-
-select categoryid, count(*) as 'Total de Productos'
-from products
+select CategoryID as 'TotalProductos' from products 
 group by categoryid;
 
-select count(*)
-from products
-
--- Seleccionar el numero de productos por el nombre de la categoria
-
-select c.categoryname, count(*) as 'Total de Productos'
-from categories as c
+--seleccionar el numero de productos por nombre de categoria
+select c.categoryname, count(p.productId) as 'TotalProducto' from categories as c
 inner join products as p
 on c.categoryid = p.categoryid
-where c.categoryname in ('Beverages', 'Confections')
-group by c.categoryname;
+where c.categoryname in('Beverages', 'Confections')
+group by categoryname;
 
+--
